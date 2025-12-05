@@ -1,3 +1,13 @@
+mod browse;
+mod help;
+mod installed;
+mod settings;
+
+use browse::BrowseView;
+use help::HelpView;
+use installed::InstalledView;
+use settings::SettingsView;
+
 use dioxus::prelude::*;
 
 use crate::DragBar;
@@ -20,7 +30,15 @@ pub fn HomeScreen() -> Element {
 
         // main screen frame
         div {  class: "bg-emerald-950 flex flex-row w-screen h-screen",
-            Sidebar { selected }
+            Sidebar { selected } // sidebar view
+
+            match selected() { // main content pane
+                SidebarRoute::InstalledMods => rsx! { InstalledView {} },
+                SidebarRoute::BrowseMods => rsx! { BrowseView {} },
+                SidebarRoute::Settings => rsx! { SettingsView {} },
+                SidebarRoute::Help => rsx! { HelpView {} },
+                SidebarRoute::None => rsx! {},
+            }
         }
     }
 }
