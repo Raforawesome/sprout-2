@@ -1,5 +1,5 @@
 use std::{
-    path::PathBuf,
+    path::{Path, PathBuf},
     sync::{LazyLock, Mutex},
 };
 
@@ -27,15 +27,15 @@ pub static SETTINGS: LazyLock<Mutex<Settings>> = LazyLock::new(|| {
  */
 #[derive(Serialize, Deserialize, Default)]
 pub struct Settings {
-    game_path: Option<String>,
+    game_path: Option<PathBuf>,
 }
 
 impl Settings {
-    pub fn game_path(&self) -> Option<&str> {
+    pub fn game_path(&self) -> Option<&Path> {
         self.game_path.as_deref()
     }
 
-    pub fn set_game_path(&mut self, game_path: Option<String>) {
+    pub fn set_game_path(&mut self, game_path: Option<PathBuf>) {
         self.game_path = game_path;
         self.save();
     }
