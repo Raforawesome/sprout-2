@@ -28,7 +28,7 @@ pub fn HomeScreen() -> Element {
 #[component]
 pub fn Sidebar(selected: Signal<SidebarRoute>) -> Element {
     rsx! {
-        div { class: "flex flex-col gap-1 items-center w-2/10 border border-emerald-900 rounded-md",
+        div { class: "flex flex-col items-center w-2/10 border border-emerald-900 rounded-md",
             div { // logo container
                 class: "mt-9 gap-4 flex flex-row items-center",
                 img { src: asset!("assets/sprout@1x-opt.webp"), class: "w-auto h-10" },
@@ -72,10 +72,10 @@ pub fn SidebarItem(
     onclick: EventHandler,
     #[props(into)] icon: String,
     #[props(into)] label: String,
-    #[props(default = false)] selected: bool,
+    selected: bool,
     class: Option<String>,
 ) -> Element {
-    let base_classes = "flex flex-row pl-6 rounded-md gap-3 text-stone-200 font-medium py-2 w-full transition-all duration-100";
+    let base_classes = "flex flex-row pl-6 gap-3 text-stone-200 font-medium py-3 w-full transition-all duration-100";
     let state_classes = if selected {
         "bg-lime-800"
     } else {
