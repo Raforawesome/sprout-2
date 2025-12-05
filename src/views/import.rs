@@ -1,8 +1,9 @@
 use std::path::PathBuf;
 
 use dioxus::prelude::*;
+use rfd::FileDialog;
 
-use crate::DragBar;
+use crate::{DragBar, settings::get_settings};
 
 #[component]
 pub fn ImportScreen() -> Element {
@@ -12,6 +13,10 @@ pub fn ImportScreen() -> Element {
     // - Some(true) means show error text
     let mut has_error: Signal<Option<bool>> = use_signal(|| None);
     let mut picker_path = use_signal(|| mods_path().to_string_lossy().to_string());
+
+    if default_game_path().exists() {
+        has_error.set(Some(false));
+    }
 
     rsx! {
         DragBar {}
@@ -53,6 +58,15 @@ pub fn ImportScreen() -> Element {
                         class: "mt-4 flex flex-row gap-4",
                         button { class: "bg-green-700 rounded-xl h-12 w-4/10 text-stone-50 font-semibold hover:bg-green-600 hover:shadow-lg hover:scale-105 transition-all duration-200",
                             div { class: "flex flex-row gap-2 items-center justify-center",
+                                onclick: move |_| {
+                                    let picked: Option<PathBuf> = FileDialog::new()
+                                        .set_title("Find your Stardew Valley installation")
+                                        .pick_folder();
+
+                                    if let Some(path) = picked {
+                                        picker_path.set(path.to_string_lossy().to_string());
+                                    }
+                                },
                                 span { class: "material-symbols-outlined", "folder" },
                                 "Browse"
                             }
@@ -62,6 +76,7 @@ pub fn ImportScreen() -> Element {
                             onclick: move |_| {
                                 if std::fs::exists(picker_path.read().as_str()).is_ok_and(|b| b) {
                                     has_error.set(Some(false));
+                                    get_settings().set_game_path(Some(PathBuf::from(picker_path())));
                                     navigator().push("/home");
                                 } else {
                                     has_error.set(Some(true));
