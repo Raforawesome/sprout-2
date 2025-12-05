@@ -4,7 +4,7 @@ use dioxus_desktop::{
 };
 
 use sprout_2::settings::{SETTINGS, get_settings};
-use sprout_2::views::ImportScreen;
+use sprout_2::views::{HomeScreen, ImportScreen};
 
 #[derive(Routable, Clone)]
 enum Routes {
@@ -12,6 +12,8 @@ enum Routes {
     Loader,
     #[route("/import")]
     ImportScreen,
+    #[route("/home")]
+    HomeScreen,
 }
 
 #[component]
@@ -20,7 +22,7 @@ fn Loader() -> Element {
     let settings = get_settings();
 
     if let Some(game_path) = settings.game_path() {
-        debug!("Found game path {game_path}");
+        debug!("Found game path {game_path:?}");
         navigator.push("/home");
     } else {
         navigator.push("/import");
